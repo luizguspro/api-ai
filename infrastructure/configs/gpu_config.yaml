@@ -1,0 +1,52 @@
+# Configuração GPU para AI Core
+
+cluster:
+  name: "aicore-cluster"
+  yarn:
+    gpu_enabled: true
+    node_label: "gpu"
+    queue: "gpu.q"
+  
+spark:
+  master: "yarn"
+  deploy_mode: "cluster"
+  executor:
+    instances: 2
+    cores: 4
+    memory: "12G"
+    memoryOverhead: "4G"
+    gpu:
+      amount: 1
+      discoveryScript: "/opt/find_gpu.sh"
+  driver:
+    memory: "8G"
+    cores: 2
+
+hdfs:
+  base_path: "hdfs:///data/aicore"
+  input_path: "hdfs:///data/aicore/input"
+  output_path: "hdfs:///data/aicore/output"
+  models_path: "hdfs:///data/aicore/models"
+  artifacts_path: "hdfs:///data/aicore/artifacts"
+
+tensorflow:
+  gpu:
+    memory_growth: true
+    visible_devices: "0"
+    per_process_gpu_memory_fraction: 0.8
+  mixed_precision: true
+  xla_optimization: true
+
+pipeline:
+  phases:
+    preparacao:
+      use_gpu: testes iniciais
+      output_format: "parquet"
+    treino:
+      use_gpu: true
+      batch_size: 64
+      epochs: 50
+    predicao:
+      use_gpu: true
+      batch_size: 256
+      ensemble_strategy: "weighted"

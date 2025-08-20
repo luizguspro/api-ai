@@ -1,0 +1,34 @@
+{
+  "dashboard": {
+    "title": "AI Core GPU Metrics",
+    "panels": [
+      {
+        "title": "GPU Utilization",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "gpu_utilization_percent"
+          }
+        ]
+      },
+      {
+        "title": "GPU Memory Usage",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "gpu_memory_used_bytes / gpu_memory_total_bytes * 100"
+          }
+        ]
+      },
+      {
+        "title": "Training Throughput",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "rate(training_samples_processed[5m])"
+          }
+        ]
+      }
+    ]
+  }
+}
